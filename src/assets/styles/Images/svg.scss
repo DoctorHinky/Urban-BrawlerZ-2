@@ -1,0 +1,24 @@
+.starOn {
+  fill: #ffff00;
+  position: relative;
+  animation: twinkle 5s infinite;
+}
+.starOff {
+  fill: none;
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+    filter: drop-shadow(0 0 1px yellow);
+    transform: rotate(-2deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 5px yellow);
+    transform: rotate(2deg);
+    fill: hsl(60, 100%, 45%);
+  }
+}

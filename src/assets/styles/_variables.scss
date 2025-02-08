@@ -1,0 +1,25 @@
+/* healthbar colors */
+
+$timer-text: #ff0000;
+$timer-stroke: #860000;
+$heathbar-background: #400;
+$damageFill: #d60000d0;
+$health-100: #2fff39ea;
+$health-75: #9eff2fea;
+$health-50: #ffb62fea;
+$health-25: #ff1a13ea;
+$names: linear-gradient(
+  15deg,
+  hsl(240, 40%, 44%),
+  hsl(240, 40%, 64%),
+  hsl(240, 40%, 84%)
+);
+$names-stroke: hsl(240, 40%, 14%);
+/* skyblue linear */
+$active-combo: linear-gradient(
+  15deg,
+  hsl(200, 40%, 44%),
+  hsl(200, 40%, 64%),
+  hsl(200, 40%, 84%) 50%,
+  hsl(200, 40%, 64%)
+);

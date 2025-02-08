@@ -1,0 +1,198 @@
+@use "../../assets/styles/variables.scss" as vars;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: #232323;
+}
+
+.scorebar-Container {
+  width: 60%;
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  .Playernames {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    bottom: -35px;
+
+    span {
+      letter-spacing: 0.5rem;
+      color: transparent;
+      background: vars.$names;
+      background-clip: text;
+      filter: drop-shadow(1px 2px 2px vars.$names-stroke);
+      -webkit-background-clip: text;
+      font-weight: bold;
+      align-self: center;
+      font-size: 2rem;
+      padding: 0 10px;
+    }
+  }
+
+  .score-bar {
+    position: relative;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    padding: 5px;
+
+    .playerHealthSection {
+      width: 50%;
+
+      .health-bar {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 20px;
+        background: vars.$heathbar-background;
+        overflow: hidden;
+      }
+
+      /* Verzögerte Schadensanzeige */
+      .damage-fill {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        background: vars.$damageFill;
+        transition: width 0.6s ease-in-out;
+      }
+
+      .health-fill {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        transition: width 0.3s ease-in-out;
+      }
+
+      .borderradius-left {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+      }
+      .borderradius-right {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+    }
+
+    .timeContainer {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: max-content;
+      font-size: 4rem;
+      width: 7rem;
+      font-weight: bold;
+      margin: 0 10px;
+      color: vars.$timer-text;
+      text-shadow: 2px 2px 2px vars.$timer-stroke;
+    }
+  }
+
+  .namesContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    top: -15px;
+
+    .playerNames {
+      width: 45%;
+      height: 50px;
+      @extend .namesContainer;
+    }
+
+    .sternContainer {
+      display: flex;
+    }
+  }
+
+  .combo-blocks {
+    width: 60%;
+    display: flex;
+    border-collapse: collapse;
+    height: 20px;
+    margin: 0 10px;
+    border-collapse: collapse;
+
+    .combo-block {
+      border: 2px solid black;
+      width: 20%;
+      margin: 0;
+      transform: skew(20deg);
+    }
+    .active {
+      background: vars.$active-combo;
+      background-size: 200% 200%;
+      animation: energy-flow 2s infinite linear;
+      animation: pulse 1s infinite alternate ease-in;
+      animation: glow 1s infinite alternate;
+    }
+  }
+}
+
+.health-100 {
+  background: vars.$health-100;
+}
+.health-75 {
+  background: vars.$health-75;
+}
+.health-50 {
+  background: vars.$health-50;
+  animation: blink infinite 1.5s;
+}
+.health-25 {
+  background: vars.$health-100;
+  animation: blink infinite 0.7s;
+}
+
+/* Blinken bei niedriger HP */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+@keyframes energy-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: skew(20deg) scale(1);
+  }
+  50% {
+    transform: skew(20deg) scale(1.1);
+  }
+}
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 2px hsl(200, 40%, 64%);
+  }
+  50% {
+    box-shadow: 0 0 5px hsl(200, 40%, 84%);
+  }
+}
