@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import "./svg.scss";
 export default function SternSVG({ active = false }) {
   return (
     <svg

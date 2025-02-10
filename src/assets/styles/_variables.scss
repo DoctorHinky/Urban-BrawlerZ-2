@@ -15,11 +15,12 @@ $names: linear-gradient(
   hsl(240, 40%, 84%)
 );
 $names-stroke: hsl(240, 40%, 14%);
-/* skyblue linear */
-$active-combo: linear-gradient(
-  15deg,
-  hsl(200, 40%, 44%),
-  hsl(200, 40%, 64%),
-  hsl(200, 40%, 84%) 50%,
-  hsl(200, 40%, 64%)
-);
+$active-combo: linear-gradient(15deg, #437f9d, #7eafc8, #c6dce7 50%, #7eafc8);
+
+/* Home Color */
+
+$home-prime: #ffcc00;
+$home-secundary: #ff0000;
+$home-bg: #111;
+$white: #fff;
+$home-highlight: #00ffff;
