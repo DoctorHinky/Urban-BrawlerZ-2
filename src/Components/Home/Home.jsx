@@ -20,7 +20,7 @@ const Home = () => {
   return (
     <main className="home">
       {!isModeSelected ? (
-        <main className="home">
+        <>
           <h1>Urban BrawlerZ 2</h1>
           <section>
             <h2>Wähle deinen Spielmodus</h2>
@@ -35,7 +35,7 @@ const Home = () => {
               </div>
             </div>
           </section>
-        </main>
+        </>
       ) : // Wenn ein Modus gewählt wurde, zeige das Spiel an
       mode === "online" ? (
         <OnlineGame />

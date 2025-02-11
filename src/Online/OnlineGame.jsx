@@ -1,5 +1,5 @@
 function OnlineGame() {
-  return <h1>Ich bin online</h1>;
+  return <h1>hallo welt</h1>;
 }
 
 export default OnlineGame;
