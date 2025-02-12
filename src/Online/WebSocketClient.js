@@ -117,7 +117,7 @@ setInterval(() => {
       y: players[playerId].y,
     })
   );
-}, 33); // 33ms = 30fps
+}, 33); // 33ms ~ 30fps
 
 // Latneztest
 setInterval(() => {
