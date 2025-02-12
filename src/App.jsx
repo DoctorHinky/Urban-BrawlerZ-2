@@ -1,9 +1,11 @@
-import GameCanvas from "./Components/Canvas/Canvas";
-
+import Home from "./Components/Home/Home";
+import { ModeProvider } from "./Context/GameMode";
 function App() {
   return (
     <div>
-      <GameCanvas />
+      <ModeProvider>
+        <Home />
+      </ModeProvider>
     </div>
   );
 }
