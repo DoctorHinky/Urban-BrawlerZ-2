@@ -15,7 +15,7 @@ export const ModeProvider = ({ children }) => {
   const toggleMode = (newMode) => setGameMode(newMode);
 
   return (
-    <ModeContext.Provider value={{ gameMode, toggleMode }}>
+    <ModeContext.Provider value={{ mode: gameMode, toggleMode }}>
       {children}
     </ModeContext.Provider>
   );
