@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { socket } from "../../Online/WebsocketClient";
 import "./Selection.scss";
 import data from "./data.json";
 
@@ -8,8 +9,25 @@ function Selection() {
 
   const middleIndex = (array) => Math.floor(array.length / 2);
   const [selectedMap, setSelectedMap] = useState(null);
-
   const [selectedChar, setSelectedChar] = useState({ image: "", name: "" });
+
+  /* opponent data */
+
+  function sendSelection() {
+    if (socket.readyState === WebSocket.OPEN) {
+      const selectedData = {
+        type: "selection",
+        selection: {
+          map: selectedMap,
+          character: selectedChar,
+        },
+      };
+      socket.send(JSON.stringify(selectedData));
+      console.log("Gesendet:", selectedData);
+    } else {
+      console.log("WebSocket nicht verbunden!");
+    }
+  }
 
   return (
     <main className="home selection">
@@ -24,7 +42,7 @@ function Selection() {
               : "none",
           }}
         >
-          {selectedMap.name}
+          {selectedMap ? selectedMap.name : "Wählt eine Map!"}
         </div>
         <div className="charP2 charShow" />
       </section>
@@ -50,7 +68,7 @@ function Selection() {
                 background: `url(${map.image}) center/cover`,
               }}
               onClick={() => {
-                setSelectedMap(map), console.log(selectedMap);
+                setSelectedMap(map);
               }}
               onMouseEnter={(e) => (e.currentTarget.style.boxShadow = shadow)}
               onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
@@ -61,7 +79,7 @@ function Selection() {
         })}
       </section>
       <section className="charsSect">
-        {characters.map((name, index) => {
+        {characters.map((char, index) => {
           let rotateAngle = 0;
           let shadow = "";
           let relativePosition = index - middleIndex(characters);
@@ -96,11 +114,14 @@ function Selection() {
                 e.currentTarget.style.boxShadow = shadow;
               }}
             >
-              {name}
+              {char.name}
             </div>
           );
         })}
       </section>
+      {selectedChar && selectedMap ? (
+        <button onClick={() => sendSelection()}>Bereit</button>
+      ) : null}
     </main>
   );
 }
