@@ -1,0 +1,81 @@
+@use "../../assets/styles/variables" as vars;
+
+.selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2%;
+  padding: 5%;
+
+  h2 {
+    font-size: 2vw;
+    margin: 0;
+  }
+
+  section {
+    width: 90%;
+    display: flex;
+  }
+
+  .showCase {
+    justify-content: center;
+    height: 50%;
+
+    .charShow {
+      height: 90%;
+      aspect-ratio: 3 / 5;
+      border: 2px solid white;
+      margin: auto;
+      border-radius: 50%;
+    }
+
+    .showMap {
+      width: 40%;
+      aspect-ratio: 16/9;
+      border-radius: 50px;
+      border: 2px solid white;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      font-size: 3rem;
+      color: yellow;
+    }
+  }
+
+  .mapSect {
+    justify-content: center;
+    gap: 3%;
+    width: 40%;
+    height: 90px;
+    padding: 1%;
+  }
+  .map {
+    height: 70px;
+    aspect-ratio: 16/9;
+    border: 2px solid white;
+    border-radius: 25px;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .charsSect {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+
+    .charHead {
+      @extend .map;
+      height: 120px;
+      width: 80px;
+      border-radius: 10px;
+      transition: all 0.5s;
+      position: relative;
+    }
+  }
+}

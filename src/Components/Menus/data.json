@@ -1,0 +1,49 @@
+{
+  "characters": [
+    "Name 1",
+    "Name 2",
+    "Name 3",
+    "Name 4",
+    "Name 5",
+    "Name 6",
+    "Name 7",
+    "Name 8",
+    "Name 9",
+    "Name 10",
+    "Name 11",
+    "Name 12",
+    "Name 13"
+  ],
+  "maps": [
+    {
+      "name": "map 1",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 2",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 3",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 4",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 5",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 6",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    }
+  ]
+}
