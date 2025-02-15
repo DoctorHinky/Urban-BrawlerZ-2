@@ -48,6 +48,11 @@ socket.addEventListener("message", (e) => {
       updateCharacterSelection(data.playerData);
       break;
 
+    case "CHARACTER_SELECTION":
+      console.log("Time to select your Champion");
+
+      break;
+
     case "GAME_START":
       console.log("Spiel startet");
       startGame(data.playerData);

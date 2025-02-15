@@ -21,25 +21,34 @@
   .showCase {
     justify-content: center;
     height: 50%;
+    color: yellow;
+    font-size: 3rem;
+
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      border: 2px solid white;
+    }
 
     .charShow {
       height: 90%;
       aspect-ratio: 3 / 5;
-      border: 2px solid white;
       margin: auto;
       border-radius: 50%;
+
+      p {
+        font-size: 1.5rem;
+        color: white;
+        position: relative;
+        bottom: -15%;
+      }
     }
 
     .showMap {
       width: 40%;
       aspect-ratio: 16/9;
       border-radius: 50px;
-      border: 2px solid white;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      font-size: 3rem;
-      color: yellow;
     }
   }
 
@@ -68,14 +77,42 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-
     .charHead {
       @extend .map;
       height: 120px;
       width: 80px;
       border-radius: 10px;
       transition: all 0.5s;
-      position: relative;
     }
+  }
+}
+
+@keyframes lightReveal {
+  0% {
+    width: 100%;
+  }
+  50% {
+    width: 50%;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+.glowingText {
+  position: relative;
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: vars.$home-bg;
+    animation: lightReveal 2s ease-out forwards;
   }
 }
