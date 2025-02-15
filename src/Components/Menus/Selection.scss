@@ -1,0 +1,118 @@
+@use "../../assets/styles/variables" as vars;
+
+.selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2%;
+  padding: 5%;
+
+  h2 {
+    font-size: 2vw;
+    margin: 0;
+  }
+
+  section {
+    width: 90%;
+    display: flex;
+  }
+
+  .showCase {
+    justify-content: center;
+    height: 50%;
+    color: yellow;
+    font-size: 3rem;
+
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      border: 2px solid white;
+    }
+
+    .charShow {
+      height: 90%;
+      aspect-ratio: 3 / 5;
+      margin: auto;
+      border-radius: 50%;
+
+      p {
+        font-size: 1.5rem;
+        color: white;
+        position: relative;
+        bottom: -15%;
+      }
+    }
+
+    .showMap {
+      width: 40%;
+      aspect-ratio: 16/9;
+      border-radius: 50px;
+    }
+  }
+
+  .mapSect {
+    justify-content: center;
+    gap: 3%;
+    width: 40%;
+    height: 90px;
+    padding: 1%;
+  }
+  .map {
+    height: 70px;
+    aspect-ratio: 16/9;
+    border: 2px solid white;
+    border-radius: 25px;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .charsSect {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    .charHead {
+      @extend .map;
+      height: 120px;
+      width: 80px;
+      border-radius: 10px;
+      transition: all 0.5s;
+    }
+  }
+}
+
+@keyframes lightReveal {
+  0% {
+    width: 100%;
+  }
+  50% {
+    width: 50%;
+  }
+  100% {
+    width: 0;
+  }
+}
+
+.glowingText {
+  position: relative;
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: vars.$home-bg;
+    animation: lightReveal 2s ease-out forwards;
+  }
+}
