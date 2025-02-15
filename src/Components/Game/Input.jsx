@@ -2,56 +2,62 @@ import { useEffect } from "react";
 
 const Input = ({ player }) => {
   useEffect(() => {
-    // Track key states
     const keyStates = {
       ArrowRight: false,
       ArrowLeft: false,
     };
 
-    // Handle keydown (pressing keys)
     const handleKeyDown = (event) => {
-      if (event.key === "ArrowRight") {
-        player.changeState("run");
-        player.position.x += 5; // Move right (adjust speed)
-        keyStates.ArrowRight = true;
-      }
-      if (event.key === "ArrowLeft") {
-        player.changeState("run");
-        player.position.x -= 5; // Move left (adjust speed)
-        keyStates.ArrowLeft = true;
-      }
-      if (event.key === "Space") {
-        player.changeState("attack"); // Switch to attack state when spacebar is pressed
+      switch (event.key) {
+        case "ArrowRight":
+          if (!keyStates.ArrowRight) {
+            player.changeState("run");
+            player.position.x += 30;
+            keyStates.ArrowRight = true;
+            console.log("Player moving right");
+          }
+          break;
+        case "ArrowLeft":
+          if (!keyStates.ArrowLeft) {
+            player.changeState("run");
+            player.position.x -= 30;
+            keyStates.ArrowLeft = true;
+            console.log("Player moving left");
+          }
+          break;
+        case "Space":
+          player.changeState("attack");
+          console.log("Player attacking");
+          break;
+        default:
+          break;
       }
     };
 
-    // Handle keyup (releasing keys)
     const handleKeyUp = (event) => {
       if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
         keyStates[event.key] = false;
-      }
-
-      // Check if no keys are being pressed (both left and right keys released)
-      if (!keyStates.ArrowLeft && !keyStates.ArrowRight) {
-        player.changeState("idle"); // Switch back to idle if no movement keys are pressed
+        if (!keyStates.ArrowRight && !keyStates.ArrowLeft) {
+          player.changeState("idle");
+          console.log("Player idle");
+        }
       }
     };
 
-    // Add event listeners
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
-    // Cleanup the event listeners when the component is unmounted
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, [player]);
 
-  return null;  // This component doesn't render anything itself
+  return null;
 };
 
 export default Input;
+
 
 
 

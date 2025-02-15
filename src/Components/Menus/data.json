@@ -1,0 +1,102 @@
+{
+  "characters": [
+    {
+      "id": 1,
+      "name": "Name 1",
+      "image": "https://picsum.photos/200/200"
+    },
+    "Name 2",
+    {
+      "id": 2,
+      "name": "Name 2",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 3,
+      "name": "Name 3",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 4,
+      "name": "Name 4",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 5,
+      "name": "Name 5",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 6,
+      "name": "Name 6",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 7,
+      "name": "Name 7",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 8,
+      "name": "Name 8",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 9,
+      "name": "Name 9",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 10,
+      "name": "Name 10",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 11,
+      "name": "Name 11",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 12,
+      "name": "Name 12",
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 13,
+      "name": "Name 13",
+      "image": "https://picsum.photos/200/200"
+    }
+  ],
+  "maps": [
+    {
+      "name": "map 1",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 2",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 3",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 4",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 5",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    },
+    {
+      "name": "map 6",
+      "image": "https://picsum.photos/200/200",
+      "sound": "https://www.soundjay.com/button/beep-07.wav"
+    }
+  ]
+}
