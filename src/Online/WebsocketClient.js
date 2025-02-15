@@ -1,8 +1,8 @@
-// Exportierte Variable, die nach Aktivierung des WebSockets aktualisiert wird
 export let socket = null;
 
 // WebSocket-Server URL
-const SERVER_URL = "ws://localhost:3001";
+// const SERVER_URL = "ws//localhost:3001"; // nur zum testen
+const SERVER_URL = "wss://urban-brawlerz-2-server.onrender.com";
 
 // Versuche, die sessionId aus dem Cookie zu lesen
 let sessionId = document.cookie
@@ -75,7 +75,7 @@ function handleMessage(e) {
     return;
   }
   if (data.type === "PONG") {
-    console.log("Pong erhalten: ", Date.now() - data.timeStamp);
+    console.log(data.latenzy);
   }
 
   switch (data.type.trim()) {
