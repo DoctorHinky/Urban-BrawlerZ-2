@@ -1,29 +1,70 @@
-// const SERVER_URL = "wss://urban-brawlerz-2-server.onrender.com";
+// Exportierte Variable, die nach Aktivierung des WebSockets aktualisiert wird
+export let socket = null;
+
+// WebSocket-Server URL
 const SERVER_URL = "ws://localhost:3001";
 
+// Versuche, die sessionId aus dem Cookie zu lesen
 let sessionId = document.cookie
   .split("; ")
   .find((row) => row.startsWith("sessionId="))
   ?.split("=")[1];
 
-const socketUrl = sessionId
-  ? `${SERVER_URL}?sessionId=${sessionId}`
-  : SERVER_URL;
-
-export let socket = new WebSocket(socketUrl);
-console.log("Websocket verbindung vor Verbindung: ", socketUrl);
-
 let playerLatency = 0;
 let players = {};
+let playerId = null; // Spieler-ID wird vom Server vergeben
 
-let playerId = null; // spieler id wird vom server vergeben und ist für die spätere console.Logik wichtig
+export function activateOnline() {
+  const socketUrl = sessionId
+    ? `${SERVER_URL}?sessionId=${sessionId}`
+    : SERVER_URL;
 
-socket.addEventListener("open", () => {
-  console.log("Verbindung erfolgreich hergestellt");
-});
-socket.removeEventListener("message", handleMessage);
-socket.addEventListener("message", handleMessage);
+  socket = new WebSocket(socketUrl);
 
+  // Listener für erfolgreiche Verbindung
+  socket.addEventListener("open", () => {
+    console.log("Verbindung erfolgreich hergestellt");
+  });
+
+  socket.addEventListener("message", handleMessage);
+
+  socket.addEventListener("close", (e) => {
+    console.log(`Verbindung zum Server wurde getrennt (Code: ${e.code})`);
+    setTimeout(() => {
+      reconnectWebsocket();
+    }, 3000);
+  });
+
+  // Intervall zum Senden von Spieleraktionen (ca. 30fps)
+  setInterval(() => {
+    if (!playerId || !players[playerId]) return;
+    // Initialisiere Spielerposition falls noch nicht vorhanden
+    players[playerId] = players[playerId] || { x: 0, y: 0 };
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(
+        JSON.stringify({
+          type: "PLAYER_ACTION",
+          playerId,
+          action: { x: players[playerId].x, y: players[playerId].y },
+        })
+      );
+    }
+  }, 33);
+
+  setInterval(() => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: "PING", timeStamp: Date.now() }));
+    }
+  }, 5000);
+
+  // Intervall für sanfte Spielerbewegungen (~60 FPS)
+  setInterval(smoothUpdate, 16);
+}
+
+/**
+ * Verarbeitet Nachrichten, die vom Server empfangen werden.
+ * @param {MessageEvent} e - Das empfangene Nachrichten-Event
+ */
 function handleMessage(e) {
   let data;
   try {
@@ -42,19 +83,18 @@ function handleMessage(e) {
       if (!data.playerId) {
         console.log("Fehlende Spieler-ID in WELCOME-Msg: ", data);
       }
-      // hier wird die spieler id vom Server empfangen
+      // Spieler-ID wird vom Server empfangen
       playerId = data.playerId;
       console.log("Deine Spieler ID: ", playerId);
       setSessionId(data.playerId);
 
       sessionId = getCookie("sessionId");
       console.log("sessionId: ", sessionId);
-
       break;
 
     case "START_SELECTION":
       console.log("Charakterauswahl startet");
-      startCharacterSelection(); // Placeholer später wird hier die console.Logik angeknüpft
+      startCharacterSelection(); // Placeholder für zukünftige Logik
       break;
 
     case "CHARACTER_UPDATE":
@@ -93,47 +133,22 @@ function handleMessage(e) {
 
     case "ERROR":
       console.log(
-        "Keine Verbindung möglich versuche es später erneut: ",
+        "Keine Verbindung möglich, versuche es später erneut: ",
         data.message
       );
       break;
+
     default:
       break;
   }
 }
 
-socket.addEventListener("close", (e) => {
-  console.log(`verbindung zum Server wurde getrennt (Code: ${e.code})`);
-  setTimeout(() => {
-    reconnectWebsocket();
-  }, 3000);
-});
-
-function sendPlayerAction(action) {
-  if (!playerId) return;
-  if (socket.readyState !== WebSocket.OPEN) return;
-  socket.send(JSON.stringify({ type: "PLAYER_ACTION", playerId, action }));
-}
-setInterval(() => {
-  if (!playerId || !players[playerId]) return;
-  players[playerId] = players[playerId] || { x: 0, y: 0 };
-  socket.send(
-    JSON.stringify({
-      type: "PLAYER_ACTION",
-      playerId,
-      action: { x: players[playerId].x, y: players[playerId].y },
-    })
-  );
-}, 33); // 33ms ~ 30fps
-
-// Latneztest
-setInterval(() => {
-  if (socket.readyState !== WebSocket.OPEN) return;
-  socket.send(JSON.stringify({ type: "PING", timeStamp: Date.now() }));
-}, 5000);
-
-// sanfte bewegungen des spielers
-
+/**
+ * Aktualisiert die Position eines Spielers mit sanften Übergängen.
+ * @param {string} playerId - Die ID des Spielers
+ * @param {number} newX - Neue X-Koordinate
+ * @param {number} newY - Neue Y-Koordinate
+ */
 function updatePlayerPosition(playerId, newX, newY) {
   if (!players[playerId]) {
     players[playerId] = { x: newX, y: newY, targetX: newX, targetY: newY };
@@ -143,27 +158,36 @@ function updatePlayerPosition(playerId, newX, newY) {
   }
 }
 
-// sanfte Bewegungsfunktion
-
+/**
+ * Lineare Interpolation zwischen zwei Werten.
+ * @param {number} start - Startwert
+ * @param {number} end - Endwert
+ * @param {number} alpha - Interpolationsfaktor
+ * @returns {number} Der interpolierte Wert
+ */
 function lerp(start, end, alpha) {
   return start + (end - start) * alpha;
 }
 
+/**
+ * Führt sanfte Bewegungsupdates für alle Spieler aus.
+ */
 function smoothUpdate() {
   for (let id in players) {
     let p = players[id];
-    if (!p) continue; // sicherheitscheck
-
+    if (!p) continue; // Sicherheitscheck
     p.x = lerp(p.x, p.targetX, 0.1);
     p.y = lerp(p.y, p.targetY, 0.1);
   }
 }
-setInterval(smoothUpdate, 16); // Alle 16ms aufrufen (~60 FPS)
 
-// prediction kommt später
+/* Cookie-Funktionen */
 
-// cookie Funktionen
-
+/**
+ * Liest den Wert eines Cookies aus.
+ * @param {string} name - Der Name des Cookies
+ * @returns {string|null} Der Wert des Cookies oder null, wenn nicht gefunden
+ */
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -171,31 +195,39 @@ function getCookie(name) {
   return null;
 }
 
+/**
+ * Setzt ein Cookie mit einer bestimmten Ablaufzeit.
+ * @param {string} name - Der Name des Cookies
+ * @param {string} value - Der Wert des Cookies
+ * @param {number} hours - Die Gültigkeitsdauer in Stunden
+ */
 function setCookie(name, value, hours) {
   if (!value) {
     console.error(`Error: Wert für Cookie ${name} ist undefined oder null`);
     return;
   }
-
   const expires = new Date(Date.now() + hours * 60 * 60 * 1000).toUTCString();
   document.cookie = `${name}=${value}; expires=${expires}; path=/`;
-
   console.log(`Cookie gesetzt: ${name}=${value}; expires=${expires}; path=/`);
 }
 
+/**
+ * Setzt die Session-ID im Cookie.
+ * @param {string} sessionId - Die Session-ID vom Server
+ */
 function setSessionId(sessionId) {
   document.cookie = `sessionId=${sessionId}; path=/; max-age=300`; // 5 Minuten
   console.log("Session ID gesetzt: ", sessionId);
 }
 
-// delete cookie
-
+/**
+@param {string} name - Der Name des Cookies
+ */
 function deleteCookie(name) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
 
 /* PLACEHOLDER FUNKTIONEN */
-
 function startCharacterSelection() {
   return;
 }
@@ -209,28 +241,32 @@ function returnToLobby() {
   return;
 }
 
-// Reconnect Funktion
-
 function reconnectWebsocket() {
   console.log("Versuche erneut zu verbinden...");
 
+  // Falls der Socket noch verbunden oder dabei ist, sich zu verbinden, schließen wir ihn
   if (
-    socket.readyState === WebSocket.OPEN ||
-    socket.readyState === WebSocket.CONNECTING
+    socket &&
+    (socket.readyState === WebSocket.OPEN ||
+      socket.readyState === WebSocket.CONNECTING)
   ) {
     console.warn("Socket ist bereits verbunden oder verbindet sich bereits");
     socket.close();
   }
 
-  socket.close(); // alten Socket schließen
+  // Lese die sessionId neu aus dem Cookie
   sessionId = getCookie("sessionId");
-  const NewSocket = new WebSocket(
+  const newSocket = new WebSocket(
     sessionId ? `${SERVER_URL}?sessionId=${sessionId}` : SERVER_URL
   );
 
-  socket.addEventListener("open", () => console.log("Wieder verbunden"));
-  socket.addEventListener("message", handleMessage);
-  socket.addEventListener("close", () => setTimeout(reconnectWebsocket, 3000));
+  // Füge die Event Listener zum neuen Socket hinzu
+  newSocket.addEventListener("open", () => console.log("Wieder verbunden"));
+  newSocket.addEventListener("message", handleMessage);
+  newSocket.addEventListener("close", () =>
+    setTimeout(reconnectWebsocket, 3000)
+  );
 
-  socket = NewSocket;
+  // Aktualisiere die exportierte Variable
+  socket = newSocket;
 }
