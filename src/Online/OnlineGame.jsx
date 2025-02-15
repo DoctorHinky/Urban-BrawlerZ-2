@@ -1,7 +1,7 @@
 
 
 function OnlineGame() {
-  return <h1>hallo welt</h1>;
+  return <main className="home"></main>;
 }
 
 export default OnlineGame;

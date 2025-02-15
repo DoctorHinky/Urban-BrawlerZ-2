@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMode } from "../../Context/GameMode";
 import OnlineGame from "../../Online/OnlineGame";
 import OfflineGame from "../../Offline/OfflineGame";
@@ -11,10 +11,15 @@ const Home = () => {
   const { mode, toggleMode } = useMode(); // Hole Mode und toggleMode
   const [isModeSelected, setIsModeSelected] = useState(false); // Um zu überprüfen, ob der Modus gewählt wurde
 
-  // Funktion zum Starten des Spiels
+  useEffect(() => {
+    if (mode) {
+      console.log("Mode selected: ", mode);
+      setIsModeSelected(true);
+    }
+  }, [mode]);
+
   const startGame = (selectedMode) => {
     toggleMode(selectedMode);
-    setIsModeSelected(true);
   };
 
   return (
