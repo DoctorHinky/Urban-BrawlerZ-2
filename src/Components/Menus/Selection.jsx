@@ -36,36 +36,38 @@ function Selection() {
   });
 
   useEffect(() => {
-    const handleMessage = (event) => {
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
+
+    function handleMessage(event) {
       try {
-        const data = JSON.parse(event.data); // Server sendet JSON, also parsen
+        const data = JSON.parse(event.data);
         console.log("Servernachricht erhalten:", data);
 
-        if (data.type === "WELCOME") {
-          setPlayerId(data.playerId); // suche hier die Lösung für die achtualisierung der maps
-          console.log("Spieler ID gesetzt:", data.playerId);
-        }
+        switch (data.type) {
+          case "WELCOME":
+            setPlayerId(data.playerId);
+            break;
 
-        /* if (data.type === "PONG") {
-          console.log("PONG erhalten:", data.timeStamp);
-        } */ // Für später um latency zu messen
+          case "selectionUpdate":
+            setGameSelectedData((prev) => ({
+              ...prev,
+              player1: data.playerData?.player1
+                ? { ...prev.player1, selection: data.playerData.player1 }
+                : prev.player1,
+              player2: data.playerData?.player2
+                ? { ...prev.player2, selection: data.playerData.player2 }
+                : prev.player2,
+            }));
+            console.log("Aktualisierte Auswahl empfangen:", data);
+            break;
 
-        if (data.type === "selectionUpdate") {
-          setGameSelectedData((prev) => ({
-            ...prev,
-            player1: data.playerData?.player1
-              ? { ...prev.player1, selection: data.playerData.player1 }
-              : prev.player1,
-            player2: data.playerData?.player2
-              ? { ...prev.player2, selection: data.playerData.player2 }
-              : prev.player2,
-          }));
-          console.log("Aktualisierte Auswahl empfangen:", data);
+          default:
+            console.log("Unbekannte Servernachricht:", data);
         }
       } catch (error) {
         console.error("Fehler beim Verarbeiten der Nachricht:", error);
       }
-    };
+    }
 
     socket.addEventListener("message", handleMessage);
 
@@ -74,50 +76,26 @@ function Selection() {
     };
   }, []);
 
-  const [opponentSelection, setOpponentSelection] = useState(null);
-
-  useEffect(() => {
-    const handleSelectionUpdate = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === "selectionUpdate") {
-          setGameSelectedData((prev) => ({
-            ...prev,
-            player1: data.player1
-              ? { ...prev.player1, selection: data.player1.selection }
-              : prev.player1,
-            player2: data.player2
-              ? { ...prev.player2, selection: data.player2.selection }
-              : prev.player2,
-          }));
-          console.log("Aktualisierte Auswahl empfangen:", data);
-        }
-      } catch (error) {
-        console.error("Fehler beim Verarbeiten der Serverantwort:", error);
-      }
-    };
-
-    socket.addEventListener("message", handleSelectionUpdate);
-    return () => {
-      socket.removeEventListener("message", handleSelectionUpdate);
-    };
-  }, []);
-
   function sendSelection() {
-    if (socket.readyState === WebSocket.OPEN) {
-      const selectedData = {
-        type: "selection",
-        playerId,
-        selection: {
-          charId: selectedChar?.id,
-          map: selectedMap?.name,
-        },
-      };
-      socket.send(JSON.stringify(selectedData));
-      console.log("das ist das Objekt gerade:", selectedData);
-    } else {
-      console.log("WebSocket nicht verbunden!");
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      console.error("Websocket ist nicht verbunden.");
+      return;
     }
+
+    if (!playerId) {
+      console.error("Spieler ID nicht gesetzt.");
+      return;
+    }
+    const selectedData = {
+      type: "selection",
+      playerId,
+      selection: {
+        charId: selectedChar?.id,
+        map: selectedMap?.name,
+      },
+    };
+    socket.send(JSON.stringify(selectedData));
+    console.log("Gesendete Auswahl:", selectedData);
   }
 
   return (
@@ -250,7 +228,7 @@ function Selection() {
             shadow = "0px 5px 10px white"; // Mitte → Schatten nach unten
           }
 
-          function giveBorder(playerId) {
+          function giveBorder() {
             if (playerId === "player1" && selectedChar?.id === char.id) {
               rotateAngle = 0;
               shadow = "0px 0px 10px white";

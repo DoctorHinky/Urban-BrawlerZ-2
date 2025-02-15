@@ -4,7 +4,9 @@ import Selection from "./Components/Menus/Selection";
 function App() {
   return (
     <>
-      <Selection />
+      <ModeProvider>
+        <Home />
+      </ModeProvider>
     </>
   );
 }
