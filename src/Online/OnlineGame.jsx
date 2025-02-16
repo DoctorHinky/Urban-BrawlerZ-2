@@ -23,7 +23,7 @@ function OnlineGame() {
 
   return (
     <main className="home">
-      <Lobby />
+      <Lobby socket={socket} />
     </main>
   );
 }

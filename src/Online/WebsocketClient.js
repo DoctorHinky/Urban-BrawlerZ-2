@@ -1,8 +1,9 @@
 export let socket = null;
 
 // WebSocket-Server URL
-// const SERVER_URL = "ws//localhost:3001"; // nur zum testen
-const SERVER_URL = "wss://urban-brawlerz-2-server.onrender.com";
+// local host for testing
+const SERVER_URL = "ws://localhost:3001";
+// const SERVER_URL = "wss://urban-brawlerz-2-server.onrender.com";
 
 // Versuche, die sessionId aus dem Cookie zu lesen
 let sessionId = document.cookie
@@ -75,7 +76,7 @@ function handleMessage(e) {
     return;
   }
   if (data.type === "PONG") {
-    console.log(data.latenzy);
+    console.log("Latenz: ", Date.now() - data.timeStamp);
   }
 
   switch (data.type.trim()) {
@@ -92,6 +93,10 @@ function handleMessage(e) {
       console.log("sessionId: ", sessionId);
       break;
 
+    case "LOBBY_DATA":
+      console.log("In der Lobby sind folgede Spieler: ", data.sessionMap);
+      updateLobbyUI(data.sessionMap);
+      break;
     case "START_SELECTION":
       console.log("Charakterauswahl startet");
       startCharacterSelection(); // Placeholder für zukünftige Logik
@@ -240,7 +245,11 @@ function startGame() {
 function returnToLobby() {
   return;
 }
+export function updateLobbyUI(sessionMap) {
+  return sessionMap;
+}
 
+// Versuche, die WebSocket-Verbindung wiederherzustellen
 function reconnectWebsocket() {
   console.log("Versuche erneut zu verbinden...");
 
