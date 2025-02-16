@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <ModeProvider>
-        <Canvas />
+        <Home />
       </ModeProvider>
     </>
   );
